@@ -1,0 +1,23 @@
+{
+  "name": "fortunafoodsbackend",
+  "version": "1.0.0",
+  "description": "Fortuna Foods backend",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edidiongaligbe/FortunaFoodsBackend.git"
+  },
+  "author": "Edidiong Aligbe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/edidiongaligbe/FortunaFoodsBackend/issues"
+  },
+  "homepage": "https://github.com/edidiongaligbe/FortunaFoodsBackend#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mysql2": "^2.2.5"
+  }
+}
