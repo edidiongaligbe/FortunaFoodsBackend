@@ -1,46 +1,84 @@
-const express = require('express')
- var app = express(); 
+const mysql = require("mysql2");
+const express = require("express");
 
-const mysql = require('mysql2');
-const conn = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'app@12345',
-    database: 'fortuna_foods'
+const app = new express();
+app.use(express.json());
+
+
+/* const conn = mysql.createConnection({
+  user: "root",
+  password: "app@12345",
+  database: "fortuna_foods",
+}); */
+
+var pool  = mysql.createPool({
+  connectionLimit : 10,
+  host: "localhost",
+  user: "root",
+  password: "app@12345",
+  database: "fortuna_foods",
+  multipleStatements: true
+}); 
+
+app.get("/", (req, res) => {
+  res.send("Welcome to Fortuna Foods.");
 });
 
-port = process.env.PORT || 3000;
-app.use(express.json);
+/* app.get("/api/test", (req, res) => {
 
-conn.connect((err) => {
-    if (err) throw err;
-    console.log("Connected!");
-    conn.query("select * from users", (err,result) => {
-        if(err) throw err;
-        console.log(result);
-    })
-  });
+  conn.promise().execute("SELECT * FROM products")
+  .then( ([rows,fields]) => {
+    if (rows.length == 0){
+      res.status(200).json({products:'No products in the database'})
+    } else {
+       console.log(rows.length)
+      res.status(200).json({ products: rows });
+    }      
+    
+  })
+  .catch(console.log)
+  .then( () => conn.end());
 
+ 
+}); */
 
-/* app.get("/api/querypayment/:id", (req, res) => {
-    client.connect(err => {
-      if (err) {
-        res.send(err.message);
-        return;
+app.get("/api/get_products", (req, res) => {
+
+  // limit as 20
+  const limit = 4
+  // page number
+  const page = req.query.page
+  // calculate offset
+  const offset = (page - 1) * limit
+  // query for fetching data with page number and offset
+  const prodsQuery = "select * from products limit "+limit+" OFFSET "+offset
+
+  pool.getConnection(function(err, connection) {
+    connection.query(prodsQuery, function (error, results, fields) {
+      connection.release();
+           if (error) throw error;
+      // create payload
+      var jsonResult = {
+        'total_items':results.length,
+        'current_page':page,
+        'products':results
       }
-      let ObjectId = require("mongodb").ObjectID;
-      let id = req.params.id;
-      console.log(id);
-      const collection = client.db("EkoBot").collection("EkoCustPayments");
-      collection.find(ObjectId(id)).toArray((errr, results) => {
-        res.json({ payment: results[0] });
-      });
-      
-    });
-  });
- */
+      // create response
+      var myJsonString = JSON.parse(JSON.stringify(jsonResult));
+      res.statusMessage = "Products for page "+page;
+      res.statusCode = 200;
+      res.json(myJsonString);
+      res.end();
+    })
+  })
+
+ 
+});
 
 
+
+
+port = process.env.PORT || 3000;
 app.listen(port, () => {
-    console.log(`App listening on ${port}`);
+  console.log(`App listening on http://localhost:${port}`);
 });
