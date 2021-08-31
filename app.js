@@ -42,12 +42,12 @@ app.get("/", (req, res) => {
  
 }); */
 
-app.get("/api/get_products", (req, res) => {
+app.get("/api/get_products/page/:pageno", (req, res) => {
 
   // limit as 20
   const limit = 4
   // page number
-  const page = req.query.page
+  const page = req.params.pageno
   // calculate offset
   const offset = (page - 1) * limit
   // query for fetching data with page number and offset
@@ -59,8 +59,8 @@ app.get("/api/get_products", (req, res) => {
            if (error) throw error;
       // create payload
       var jsonResult = {
-        'total_items':results.length,
         'current_page':page,
+        'page_count':results.length,        
         'products':results
       }
       // create response
