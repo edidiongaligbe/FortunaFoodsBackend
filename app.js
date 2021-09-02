@@ -7,10 +7,10 @@ var server = require('http').createServer(app);
 
 var pool = mysql.createPool({
   connectionLimit: 10,
-  host: process.env.HOST,
-  user: process.env.USER,
-  password: process.env.PWD,
-  database: process.env.DB,
+  host: "eu-cdbr-west-01.cleardb.com",
+  user: "b5f919af6ecb3e",
+  password: "57d7b8b2",
+  database: "heroku_bf35697928ed881",
   multipleStatements: true,
 });
 
