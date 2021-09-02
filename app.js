@@ -3,13 +3,14 @@ const express = require("express");
 
 const app = new express();
 app.use(express.json());
+var server = require('http').createServer(app);
 
 var pool = mysql.createPool({
   connectionLimit: 10,
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB,
+  host: "eu-cdbr-west-01.cleardb.com",
+  user: "b5f919af6ecb3e",
+  password: "57d7b8b2",
+  database: "heroku_bf35697928ed881",
   multipleStatements: true,
 });
 
@@ -69,6 +70,6 @@ app.get("/api/get_products/page/:pageno", (req, res) => {
 });
 
 port = process.env.PORT || 3000;
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`App listening on http://localhost:${port}`);
 });
